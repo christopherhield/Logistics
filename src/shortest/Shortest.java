@@ -24,19 +24,7 @@ public class Shortest {
 
     public static void main(String[] args) {
 
-        
-        /*Schedule s = new Schedule5DayImpl();
-        GregorianCalendar x = new GregorianCalendar(2016, 0, 1);
-        
-        System.out.println(s.bookDaysForLoad(x, 1138));
-        
-        x.add(Calendar.DATE, 20);
-        
-        System.out.println(s.bookDaysForLoad(x, 5));
-        
-        s.dumpSchedule();
-        
-        System.exit(0);*/
+
         
         makeNodes();
 
