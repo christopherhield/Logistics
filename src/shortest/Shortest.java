@@ -45,6 +45,7 @@ public class Shortest {
         System.out.println(System.currentTimeMillis() - start + " ms");
 
         GregorianCalendar gc = new GregorianCalendar(2016, 0, 1);
+        
         Schedule n = nodes.get("Seattle, WA");
         
         System.out.println(n.determineDaysForLoad(gc, 38));
