@@ -37,7 +37,7 @@ public class Shortest {
         System.out.println(n.determineDaysForLoad(gc, 38));
         n.dumpSchedule();
   
-        System.out.println(n.bookDaysForLoad(gc, 38));
+        System.out.println(n.bookDaysForLoad(gc, 138));
         n.dumpSchedule();
         
     }

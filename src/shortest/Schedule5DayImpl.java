@@ -112,14 +112,14 @@ public class Schedule5DayImpl implements Schedule {
             System.out.println("Schedule Empty");
             return;
         }
-        SimpleDateFormat format1 = new SimpleDateFormat("MM/dd/yyyy");
+        SimpleDateFormat format1 = new SimpleDateFormat("MM/dd/yyyy EEE");
         ArrayList<Calendar> tmp = new ArrayList<>(calendar.keySet());
         Collections.sort(tmp);
 
         Calendar current = (Calendar) tmp.get(0).clone();
         Calendar last = tmp.get(tmp.size() - 1);
         while (!current.equals(last)) {
-            System.out.println(format1.format(current.getTime()) + ": " + (calendar.get(current) == null ? maxPerDay : calendar.get(current)));
+            System.out.println(format1.format(current.getTime()) + ": " + (calendar.get(current) == null ? maxPerDay : calendar.get(current)) + " remaining");
             current.add(Calendar.DATE, 1);
             if (isWeekend(current)) {
                 moveToNextWeekday(current);
@@ -128,6 +128,6 @@ public class Schedule5DayImpl implements Schedule {
                 moveToNextWeekday(current);
             }
         }
-        System.out.println(format1.format(last.getTime()) + ": " + calendar.get(last));
+        System.out.println(format1.format(last.getTime()) + ": " + calendar.get(last) + " remaining");
     }
 }
