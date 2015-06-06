@@ -24,8 +24,6 @@ public class Shortest {
 
     public static void main(String[] args) {
 
-
-        
         makeNodes();
 
         long start = System.currentTimeMillis();
