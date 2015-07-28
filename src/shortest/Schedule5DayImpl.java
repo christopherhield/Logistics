@@ -20,7 +20,7 @@ import java.util.HashSet;
 public class Schedule5DayImpl implements Schedule {
 
     private final HashMap<Calendar, Integer> calendar = new HashMap<>();
-    private final int maxPerDay = 10;
+
     private static final HashSet<Calendar> holidays = new HashSet<>();
 
     static {
@@ -41,12 +41,12 @@ public class Schedule5DayImpl implements Schedule {
         if (calendar.containsKey(c)) {
             return calendar.get(c);
         }
-        return maxPerDay;
+        return MAX_PER_DAY;
     }
 
-    @Override
-    public void updateAvailable(Calendar c, int count) {
-        int value = maxPerDay;
+    //@Override
+    private void updateAvailable(Calendar c, int count) {
+        int value = MAX_PER_DAY;
         if (calendar.containsKey(c)) {
             value = calendar.get(c);
         }
@@ -65,7 +65,7 @@ public class Schedule5DayImpl implements Schedule {
         return calculateDaysForLoad(c, count, true);
     }
 
-    public int calculateDaysForLoad(Calendar c, int count, boolean set) {
+    private int calculateDaysForLoad(Calendar c, int count, boolean set) {
         Calendar gc = (Calendar) c.clone();
         int days = 0;
         int remainder = count;
@@ -106,28 +106,28 @@ public class Schedule5DayImpl implements Schedule {
     }
 
     @Override
-    public void dumpSchedule() {
-        
-        if (calendar.isEmpty()) {
-            System.out.println("Schedule Empty");
-            return;
-        }
-        SimpleDateFormat format1 = new SimpleDateFormat("MM/dd/yyyy EEE");
+    public void dumpSchedule(Calendar start, Calendar end) {
+
+        SimpleDateFormat format1 = new SimpleDateFormat(" E, MM/dd/yyyy");
         ArrayList<Calendar> tmp = new ArrayList<>(calendar.keySet());
         Collections.sort(tmp);
 
-        Calendar current = (Calendar) tmp.get(0).clone();
-        Calendar last = tmp.get(tmp.size() - 1);
-        while (!current.equals(last)) {
-            System.out.println(format1.format(current.getTime()) + ": " + (calendar.get(current) == null ? maxPerDay : calendar.get(current)) + " remaining");
-            current.add(Calendar.DATE, 1);
+        Calendar current = (Calendar) start.clone();
+
+        while (!current.after(end)) {
+
             if (isWeekend(current)) {
-                moveToNextWeekday(current);
+                System.out.println(format1.format(current.getTime()) + ", Weekend");
+                current.add(Calendar.DATE, 1);
+                continue;
             }
             if (holidays.contains(current)) {
-                moveToNextWeekday(current);
+                System.out.println(format1.format(current.getTime()) + ", Holiday");
+                current.add(Calendar.DATE, 1);
+                continue;
             }
+            System.out.println(format1.format(current.getTime()) + ", Free: " + (calendar.get(current) == null ? MAX_PER_DAY : calendar.get(current)) + " hrs");
+            current.add(Calendar.DATE, 1);
         }
-        System.out.println(format1.format(last.getTime()) + ": " + calendar.get(last) + " remaining");
     }
 }

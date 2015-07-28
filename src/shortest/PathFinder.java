@@ -16,27 +16,35 @@ public abstract class PathFinder {
     private static HashMap<String, Site> nodes = null;
     private static int lowTime = Integer.MAX_VALUE;
     private static ArrayList<String> lowPath = null;
-    private static int MPH = 50;
 
     private static void mapAllPairs(HashMap<String, Site> listIn, String init) {
         nodes = listIn;
         mapPairs(init);
     }
 
+    public static int getPathDistance(ArrayList<String> path) {
+        
+        int d = 0;
+        for (int i = 0; i < path.size()-1; i++) {
+            d += nodes.get(path.get(i)).getLinkDistance(path.get(i+1));
+        }
+        return d;
+    }
+    
     private static void mapPairs(String init) {
 
         seen.add(init);
-        for (String n : nodes.get(init).getNeighbors(init)) {
-            //System.out.println(init + "->" + n + " = " + (nodes.get(init).getDelay() + nodes.get(init).getLinkTime(n) + nodes.get(n).getDelay()));
+        for (String n : nodes.get(init).getNeighbors()) {
+            //System.out.println(init + "->" + n + " = " + (nodes.get(init).getDelay() + nodes.get(init).getLinkDistance(n) + nodes.get(n).getDelay()));
 
-            pairs.put(init + "->" + n, (nodes.get(init).getDelay() + nodes.get(init).getLinkTime(n) + nodes.get(n).getDelay()));
+            pairs.put(init + "->" + n, (nodes.get(init).getLinkDistance(n)));
             if (!seen.contains(n)) {
                 mapPairs(n);
             }
         }
     }
 
-    public static void findBestPath(String start, String end, HashMap<String, Site> listIn) {
+    public static ArrayList<String> findBestPath(String start, String end, HashMap<String, Site> listIn) {
 
         if (pairs.isEmpty()) {
             mapAllPairs(listIn, start);
@@ -47,7 +55,9 @@ public abstract class PathFinder {
         initLoc.add(start);
 
         findPaths(start, end, initLoc);
-        System.out.println("\n" + lowPath + " " + lowTime);
+        //System.out.println("\n" + lowPath + " " + lowTime);
+        
+        return lowPath;
 
     }
 
@@ -83,21 +93,11 @@ public abstract class PathFinder {
 
     private static void processPath(ArrayList<String> path) {
         int time = 0;
-        time += sumDelays(path);
         time += sumLinks(path);
         if (time < lowTime) {
             lowTime = time;
             lowPath = new ArrayList<>(path);
         }
-        //System.out.println(path + " " + time);
-    }
-
-    private static int sumDelays(ArrayList<String> path) {
-        int time = 0;
-        for (String s : path) {
-            time += nodes.get(s).getDelay();
-        }
-        return time;
     }
 
     private static int sumLinks(ArrayList<String> path) {
@@ -106,7 +106,7 @@ public abstract class PathFinder {
 
         for (int i = 1; i < path.size(); i++) {
             String pair = start + "->" + path.get(i);
-            time += pairs.get(pair)/MPH;
+            time += pairs.get(pair);
             start = path.get(i);
         }
         return time;

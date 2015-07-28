@@ -13,11 +13,9 @@ import java.util.HashSet;
  */
 public interface Site extends Schedule {
 
-    HashSet<String> getNeighbors(String s);
+    HashSet<String> getNeighbors();
 
-    int getDelay();
-
-    int getLinkTime(String s);
+    int getLinkDistance(String s);
     
     void addLink(String tgt, int d);
 }

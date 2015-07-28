@@ -20,67 +20,99 @@ public class Shortest {
     static HashMap<String, Site> nodes = new HashMap<>();
     static HashSet<String> seen = new HashSet<>();
     static HashMap<String, Integer> pairs = new HashMap<>();
-    
 
     public static void main(String[] args) {
 
         makeNodes();
+        dumpNodes();
 
-        long start = System.currentTimeMillis();
-        PathFinder.findBestPath("Seattle, WA", "Miami, FL", nodes);
-        System.out.println(System.currentTimeMillis() - start + " ms");
+        doExample("Seattle, WA", "Miami, FL");
+        doExample("Los Angeles, CA", "Boston, MA");
+        doExample("New Orleans, LA", "Chicago, IL");
 
-        GregorianCalendar gc = new GregorianCalendar(2016, 0, 1);
-        
-        Schedule n = nodes.get("Seattle, WA");
-        
-        System.out.println(n.determineDaysForLoad(gc, 38));
-        n.dumpSchedule();
-  
-        System.out.println(n.bookDaysForLoad(gc, 138));
-        n.dumpSchedule();
-        
+        System.out.println("----------------------");
+
+        doBookExample("Chicago, IL", 38);
+        System.out.println("---");
+        doBookExample("Norfolk, VA", 64);
+        System.out.println("---");
+        doBookExample("Chicago, IL", 25);
+        System.out.println("---");
     }
 
-    
+    private static void doExample(String s1, String s2) {
+        long start = System.currentTimeMillis();
+        ArrayList<String> path = PathFinder.findBestPath(s1, s2, nodes);
+        int distance = PathFinder.getPathDistance(path);
+        System.out.println("\nShortest path from " + s1 + " to " + s2 + ": " + path + " = " + String.format("%,d", distance)
+                + " mi (" + (System.currentTimeMillis() - start) + " ms)");
+    }
+
+    private static void doBookExample(String site, int count) {
+
+        GregorianCalendar gc = new GregorianCalendar(2016, 0, 1);
+        Schedule n = nodes.get(site);
+        System.out.println("\nDays to load " + count + " items at " + site + " from " + gc.getTime() + ": " + n.determineDaysForLoad(gc, count));
+        System.out.println("Schedule BEFORE booking time at " + site + ":");
+        n.dumpSchedule(new GregorianCalendar(2016, 0, 1), new GregorianCalendar(2016, 0, 15));
+
+        
+        n.bookDaysForLoad(gc, count);
+        System.out.println("Schedule AFTER booking time at " + site + ":");
+        n.dumpSchedule(new GregorianCalendar(2016, 0, 1), new GregorianCalendar(2016, 0, 15));
+    }
+
+    private static void dumpNodes() {
+        System.out.println("Node summary:");
+
+        int i = 1;
+        for (String s : nodes.keySet()) {
+            System.out.print("   " + i++ + ") " + s + ": ");
+
+            for (String n : nodes.get(s).getNeighbors()) {
+                System.out.print(n + " (" + nodes.get(s).getLinkDistance(n) + "); ");
+            }
+            System.out.println();
+        }
+    }
+
     private static void makeNodes() {
 
-
-        Node n = new Node("Seattle, WA", 0, 25, 95);
+        Node n = new Node("Seattle, WA", 25, 95);
         nodes.put(n.getName(), n);
-        n = new Node("San Francisco, CA", 0, 10, 330);
+        n = new Node("San Francisco, CA", 10, 330);
         nodes.put(n.getName(), n);
-        n = new Node("Los Angeles, CA", 0, 80, 500);
+        n = new Node("Los Angeles, CA", 80, 500);
         nodes.put(n.getName(), n);
-        n = new Node("Phoenix, AZ", 0, 300, 615);
+        n = new Node("Phoenix, AZ", 300, 615);
         nodes.put(n.getName(), n);
-        n = new Node("Denver, CO", 0, 360, 330);
+        n = new Node("Denver, CO", 360, 330);
         nodes.put(n.getName(), n);
-        n = new Node("Santa Fe, NM", 0, 440, 500);
+        n = new Node("Santa Fe, NM", 440, 500);
         nodes.put(n.getName(), n);
-        n = new Node("Fargo, ND", 0, 520, 100);
+        n = new Node("Fargo, ND", 520, 100);
         nodes.put(n.getName(), n);
-        n = new Node("Austin, TX", 0, 610, 690);
+        n = new Node("Austin, TX", 610, 690);
         nodes.put(n.getName(), n);
-        n = new Node("St. Louis, MO", 0, 720, 400);
+        n = new Node("St. Louis, MO", 720, 400);
         nodes.put(n.getName(), n);
-        n = new Node("Chicago, IL", 0, 760, 180);
+        n = new Node("Chicago, IL", 760, 180);
         nodes.put(n.getName(), n);
-        n = new Node("New Orleans, LA", 0, 850, 690);
+        n = new Node("New Orleans, LA", 850, 690);
         nodes.put(n.getName(), n);
-        n = new Node("Nashville, TN", 0, 900, 475);
+        n = new Node("Nashville, TN", 900, 475);
         nodes.put(n.getName(), n);
-        n = new Node("Detroit, MI", 0, 980, 175);
+        n = new Node("Detroit, MI", 980, 175);
         nodes.put(n.getName(), n);
-        n = new Node("Boston, MA", 0, 1160, 150);
+        n = new Node("Boston, MA", 1160, 150);
         nodes.put(n.getName(), n);
-        n = new Node("New York City, NY", 0, 1125, 250);
+        n = new Node("New York City, NY", 1125, 250);
         nodes.put(n.getName(), n);
-        n = new Node("Norfolk, VA", 0, 1115, 410);
+        n = new Node("Norfolk, VA", 1115, 410);
         nodes.put(n.getName(), n);
-        n = new Node("Atlanta, GA", 0, 1120, 600);
+        n = new Node("Atlanta, GA", 1120, 600);
         nodes.put(n.getName(), n);
-        n = new Node("Miami, FL", 0, 1190, 780);
+        n = new Node("Miami, FL", 1190, 780);
         nodes.put(n.getName(), n);
 
         nodes.get("Seattle, WA").addLink("Fargo, ND", 1426);
@@ -158,6 +190,5 @@ public class Shortest {
         nodes.get("Miami, FL").addLink("New Orleans, LA", 864);
 
     }
-    
 
 }

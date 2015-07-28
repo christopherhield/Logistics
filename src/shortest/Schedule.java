@@ -13,7 +13,9 @@ import java.util.Calendar;
  */
 public interface Schedule {
 
-    void dumpSchedule();
+    final int MAX_PER_DAY = 8;
+
+    void dumpSchedule(Calendar start, Calendar end);
 
     int getAvailable(Calendar c);
 
@@ -21,6 +23,6 @@ public interface Schedule {
 
     int bookDaysForLoad(Calendar c, int count);
 
-    void updateAvailable(Calendar c, int count);
+    //void updateAvailable(Calendar c, int count);
 
 }
