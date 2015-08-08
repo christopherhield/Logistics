@@ -35,8 +35,6 @@ public abstract class PathFinder {
 
         seen.add(init);
         for (String n : nodes.get(init).getNeighbors()) {
-            //System.out.println(init + "->" + n + " = " + (nodes.get(init).getDelay() + nodes.get(init).getLinkDistance(n) + nodes.get(n).getDelay()));
-
             pairs.put(init + "->" + n, (nodes.get(init).getLinkDistance(n)));
             if (!seen.contains(n)) {
                 mapPairs(n);
